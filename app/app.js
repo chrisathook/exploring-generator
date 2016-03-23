@@ -27,8 +27,13 @@ var App = function() {
   // reference for auto timer, set by window.setTimeout if needed
   this._autoTimer = 0;
 
+
+
 };
 // api
+
+
+
 /**
  * called once all initialization events are complete.
  */
@@ -36,7 +41,7 @@ App.prototype.init = function() {
 
 
 
-  this.adKitState.adKitReady.addOnce(this.init, this);
+  //
 
   console.log("page loaded");
   this.trackingController = TrackingController.getInstance();
