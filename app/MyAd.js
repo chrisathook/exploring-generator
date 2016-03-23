@@ -9,10 +9,13 @@ var MyAd = function () {
   App.call (this);
 
   this.superProto = this.constructor.super_.prototype;
+
+  this.player = null;
   console.log ("My Ad Hello World");
 
 
   this.adKitState.adKitReady.addOnce(this.preload, this);
+
 
   
 };
@@ -20,118 +23,76 @@ var MyAd = function () {
 inherits(MyAd, App);
 
 
-/**
- * do any preloading before the content is loaded;
- */
-
 MyAd.prototype.preload = function () {
-
-
-
-
   var tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   var firstScriptTag = document.getElementsByTagName('script')[0];
-
-  window.onYouTubeIframeAPIReady  =this.preloadComplete.bind (this);
-
+  window.onYouTubeIframeAPIReady  =this.apiReady.bind (this);
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 };
 
-/**
- * call when your preloading is done, will load the iframe content
- */
-MyAd.prototype.preloadComplete = function () {
 
-  this.init ();
+MyAd.prototype.apiReady = function () {
+  this.player = new YT.Player('player', {
+    height: '390',
+    width: '500',
+    videoId: 'M7lc1UVf-VE',
+    events: {
+      'onReady': this.playerReady.bind (this)
+    }
+  });
 
 };
 
+MyAd.prototype.playerReady = function () {
+  this.preloadComplete()
+};
 
+MyAd.prototype.preloadComplete = function () {
+  this.init ();
+};
 
-
-/**************************************************************************************************************************
- 
- API
- 
- ***************************************************************************************************************************/
-
-/**************************************************************************************************************************
- 
- Private Functions
- 
- ***************************************************************************************************************************/
-
-
-/**************************************************************************************************************************
- 
- Event Handlers
- 
- ***************************************************************************************************************************/
 
 
 MyAd.prototype._expandStartHandlerAUTO = function(signal) {
-
-  //clean up your stuff before
   this.superProto._expandStartHandlerAUTO.call (this);
-
-
-
 };
+
 MyAd.prototype._expandFinishHandlerAUTO = function(signal) {
-
-
- //clean up your stuff before
- this.superProto._expandFinishHandlerAUTO.call (this);
-
-
+  this.superProto._expandFinishHandlerAUTO.call (this);
+  document.getElementById("player").style.opacity = 1;
 };
+
 MyAd.prototype._collapseStartHandlerAUTO = function(signal) {
-
-  //clean up your stuff before
+  document.getElementById("player").style.opacity = 0;
+  this.player.pauseVideo();
   this.superProto._collapseStartHandlerAUTO.call (this);
-
-
-
 };
+
 MyAd.prototype._collapseFinishHandlerAUTO = function(signal) {
-  //clean up your stuff before
   this.superProto._collapseFinishHandlerAUTO.call (this);
-
-
 };
 
 
 MyAd.prototype._expandStartHandlerUSER  = function(signal) {
-
-  //clean up your stuff before
   this.superProto._expandStartHandlerUSER .call (this);
-
-
-
 };
+
 MyAd.prototype._expandFinishHandlerUSER  = function(signal) {
-
-
- //clean up your stuff before
- this.superProto._expandFinishHandlerUSER .call (this);
-
+  this.superProto._expandFinishHandlerUSER .call (this);
+  document.getElementById("player").style.opacity = 1;
 
 };
+
 MyAd.prototype._collapseStartHandlerUSER  = function(signal) {
-
-  //clean up your stuff before
+  this.player.pauseVideo();
+  document.getElementById("player").style.opacity = 0;
   this.superProto._collapseStartHandlerUSER .call (this);
-
-
-
 };
+
 MyAd.prototype._collapseFinishHandlerUSER  = function(signal) {
-  //clean up your stuff before
   this.superProto._collapseFinishHandlerUSER.call (this);
-
-
 };
 
 
