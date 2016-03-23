@@ -1,4 +1,4 @@
 'use strict';
-var config = require('./config');
-var App = require('./app');
-window.app = new App();
+
+var MyAd = require('./MyAd');
+window.app = new MyAd();

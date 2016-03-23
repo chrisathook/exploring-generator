@@ -26,13 +26,18 @@ var App = function() {
   this.userLoader = null;
   // reference for auto timer, set by window.setTimeout if needed
   this._autoTimer = 0;
-  this.adKitState.adKitReady.addOnce(this.init, this);
+
 };
 // api
 /**
  * called once all initialization events are complete.
  */
 App.prototype.init = function() {
+
+
+
+  this.adKitState.adKitReady.addOnce(this.init, this);
+
   console.log("page loaded");
   this.trackingController = TrackingController.getInstance();
   this.trackingController.exitTriggered.add(this._exitHandler, this);
