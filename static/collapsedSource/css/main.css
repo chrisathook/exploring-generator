@@ -1,0 +1,67 @@
+body {
+
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  background-color: #999999;
+  cursor: pointer;
+
+}
+
+#adRoot {
+
+	width: 970px;
+	height: 90px;
+	position: absolute;
+	cursor: pointer;
+}
+
+
+#catchAll {
+  width: 970px;
+  height: 90px;
+  background-color: #FFFFFF;
+  position: absolute;
+
+}
+
+#cta{
+
+	width: 80px;
+	height: 20px;
+	position: absolute;
+
+	background-color: #FF0000;
+	color: #666666;
+	text-align: center;
+	left: 110px;
+    top: 30px;
+    cursor: pointer;
+
+}
+
+#expandButton{
+
+  width: 80px;
+  height: 20px;
+  position: absolute;
+
+  background-color: #FF0000;
+  color: #666666;
+  text-align: center;
+  left: 210px;
+  top: 30px;
+  cursor: pointer;
+
+}
+
+#expandButton:hover {
+    color: #0000FF;
+  }
+
+
+#cta:hover {
+
+	color: #0000FF;
+}
+
