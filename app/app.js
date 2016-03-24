@@ -64,6 +64,19 @@ App.prototype.loadCollapsed = function() {
 
 };
 
+App.prototype.loadAuto = function() {
+  this.autoLoader = new IFrameLoader(this.autoDIV, config.autoAnimationSource, "autoIframeSource", "expanded");
+  this.autoLoader.loaded.addOnce(this._autoLoaded, this);
+  this.autoLoader.load();
+
+};
+
+App.prototype.loadUser = function() {
+
+  this.userLoader = new IFrameLoader(this.userDIV, config.userAnimationSource, "userIframeSource", "expanded");
+  this.userLoader.loaded.addOnce(this._userLoaded, this);
+  this.userLoader.load();
+};
 
 // ***************************************************************************************************************************************************************
 // PRIVATE FUNCTIONS
@@ -111,11 +124,8 @@ App.prototype._stopTimer = function() {
 
 App.prototype._collapsedLoadedAUTO = function(signal) {
     this._addAutoListeners();
-    this.autoLoader = new IFrameLoader(this.autoDIV, config.autoAnimationSource, "autoIframeSource", "expanded");
-    this.autoLoader.loaded.addOnce(this._autoLoaded, this);
-    this.autoLoader.load();
-
 };
+
 App.prototype._collapsedLoadedUSER = function(signal) {
     this._addUserListeners();
     this._borderManager.moveBottomBorderUp();
@@ -169,9 +179,7 @@ App.prototype._collapseFinishHandlerAUTO = function(signal) {
 App.prototype._expandStartHandlerUSER = function(signal) {
   this.userDIV.setAttribute('class', "opaque expanded");
   this._borderManager.moveBottomBorderDown();
-  this.userLoader = new IFrameLoader(this.userDIV, config.userAnimationSource, "userIframeSource", "expanded");
-  this.userLoader.loaded.addOnce(this._userLoaded, this);
-  this.userLoader.load();
+  //this.loadUser()
 };
 App.prototype._expandFinishHandlerUSER = function(signal) {
   console.log("_expandFinishHandlerUSER");

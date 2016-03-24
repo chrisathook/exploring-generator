@@ -56,9 +56,19 @@ MyAd.prototype.preloadComplete = function () {
 
 
 
-MyAd.prototype._expandStartHandlerAUTO = function(signal) {
-  this.superProto._expandStartHandlerAUTO.call (this);
+MyAd.prototype._collapsedLoadedAUTO = function(signal) {
+  this.superProto._collapsedLoadedAUTO.call (this);
+  this.loadAuto();
+
+
 };
+
+
+MyAd.prototype._expandStartHandlerUSER = function(signal) {
+  this.superProto._expandStartHandlerUSER.call (this);
+  this.loadUser()
+};
+
 
 MyAd.prototype._expandFinishHandlerAUTO = function(signal) {
   this.superProto._expandFinishHandlerAUTO.call (this);
@@ -71,14 +81,7 @@ MyAd.prototype._collapseStartHandlerAUTO = function(signal) {
   this.superProto._collapseStartHandlerAUTO.call (this);
 };
 
-MyAd.prototype._collapseFinishHandlerAUTO = function(signal) {
-  this.superProto._collapseFinishHandlerAUTO.call (this);
-};
 
-
-MyAd.prototype._expandStartHandlerUSER  = function(signal) {
-  this.superProto._expandStartHandlerUSER .call (this);
-};
 
 MyAd.prototype._expandFinishHandlerUSER  = function(signal) {
   this.superProto._expandFinishHandlerUSER .call (this);
@@ -92,9 +95,6 @@ MyAd.prototype._collapseStartHandlerUSER  = function(signal) {
   this.superProto._collapseStartHandlerUSER .call (this);
 };
 
-MyAd.prototype._collapseFinishHandlerUSER  = function(signal) {
-  this.superProto._collapseFinishHandlerUSER.call (this);
-};
 
 
 
