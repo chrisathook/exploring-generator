@@ -1,14 +1,15 @@
 'use strict';
 
-var inherits = require('inherits');
-
+var config = require('./config');
 var App = require ("./app");
 
 var MyAd = function () {
 
-  App.call (this);
+  this.app = new App ();
 
-  this.superProto = this.constructor.super_.prototype;
+  //cheat so I don't have to refactor the animation templates yet since this is a proof of concept
+  this.adKitState = this.app.adKitState;
+  this.trackingController = this.app.trackingController;
 
   this.player = null;
   console.log ("My Ad Hello World");
@@ -17,10 +18,12 @@ var MyAd = function () {
   this.adKitState.adKitReady.addOnce(this.preload, this);
 
 
+
+
+
   
 };
 
-inherits(MyAd, App);
 
 
 MyAd.prototype.preload = function () {
@@ -46,45 +49,81 @@ MyAd.prototype.apiReady = function () {
 };
 
 MyAd.prototype.playerReady = function () {
-  this.preloadComplete()
+
+    this.app.init ();
+
+
+
+    if (config.isAuto) {
+      this.app.collapsedLoader.loaded.addOnce(this._collapsedLoadedAUTO, this,11);
+    }else {
+
+      this.app.collapsedLoader.loaded.addOnce(this._collapsedLoadedUSER, this,11);
+    }
+
+    this.app.loadCollapsed();
+
 };
 
-MyAd.prototype.preloadComplete = function () {
-  this.init ();
-  this.loadCollapsed();
-};
 
 
 
 MyAd.prototype._collapsedLoadedAUTO = function(signal) {
-  this.superProto._collapsedLoadedAUTO.call (this);
-  this.loadAuto();
+
+
+
+   this.app.adKitState.expansionComplete.addOnce(this._expandFinishHandlerAUTO, this,11);
+   this.app.adKitState.collapseStart.addOnce(this._collapseStartHandlerAUTO, this,9);
+   this.app.adKitState.collapseComplete.addOnce(this._collapseFinishHandlerAUTO, this,9);
+
+  this.app.loadAuto();
 
 
 };
 
 
-MyAd.prototype._expandStartHandlerUSER = function(signal) {
-  this.superProto._expandStartHandlerUSER.call (this);
-  this.loadUser()
+MyAd.prototype._collapsedLoadedUSER = function(signal) {
+   this.app.adKitState.expansionStart.add(this._expandStartHandlerUSER, this,11);
+   this.app.adKitState.expansionComplete.add(this._expandFinishHandlerUSER, this,11);
+   this.app.adKitState.collapseStart.add(this._collapseStartHandlerUSER, this,9);
+
 };
+
+
+
 
 
 MyAd.prototype._expandFinishHandlerAUTO = function(signal) {
-  this.superProto._expandFinishHandlerAUTO.call (this);
+
   document.getElementById("player").style.opacity = 1;
 };
 
 MyAd.prototype._collapseStartHandlerAUTO = function(signal) {
   document.getElementById("player").style.opacity = 0;
   this.player.pauseVideo();
-  this.superProto._collapseStartHandlerAUTO.call (this);
+};
+
+MyAd.prototype._collapseFinishHandlerAUTO = function(signal) {
+
+   this.app.adKitState.expansionStart.add(this._expandStartHandlerUSER, this,11);
+   this.app.adKitState.expansionComplete.add(this._expandFinishHandlerUSER, this,11);
+   this.app.adKitState.collapseStart.add(this._collapseStartHandlerUSER, this,9);
+
+  document.getElementById("player").style.opacity = 0;
+  this.player.pauseVideo();
 };
 
 
+MyAd.prototype._expandStartHandlerUSER = function(signal) {
+
+
+
+
+  this.app.loadUser()
+};
+
 
 MyAd.prototype._expandFinishHandlerUSER  = function(signal) {
-  this.superProto._expandFinishHandlerUSER .call (this);
   document.getElementById("player").style.opacity = 1;
 
 };
@@ -92,7 +131,6 @@ MyAd.prototype._expandFinishHandlerUSER  = function(signal) {
 MyAd.prototype._collapseStartHandlerUSER  = function(signal) {
   this.player.pauseVideo();
   document.getElementById("player").style.opacity = 0;
-  this.superProto._collapseStartHandlerUSER .call (this);
 };
 
 

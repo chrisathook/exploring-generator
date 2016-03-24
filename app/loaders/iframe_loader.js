@@ -21,6 +21,7 @@ var IFrameLoader = function(targetDIV, url, id, cssClass) {
   this.iframeDocument = null; // reference to the document inside the iframe
   this.ad = null; // refernce to the adkit instance of our custom ad kits. In a generic implementation this will be full.
   this.loaded = new Signal(); // signla for when loading is dine
+  this.loaded.memorize = true;
   this._secondaryLoadCallback = this._secondLoadDone.bind(this); // callback for secondary loading
   this._firstLoadHandlerFT_DEL = this._firstLoadHandlerFT.bind(this);
 };

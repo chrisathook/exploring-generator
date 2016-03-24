@@ -41,51 +41,54 @@ App.prototype.init = function() {
 
   console.log("page loaded");
   this.trackingController = TrackingController.getInstance();
-  this.trackingController.exitTriggered.add(this._exitHandler, this);
+  this.trackingController.exitTriggered.add(this._exitHandler, this,10);
   config.collapseAnimationSource = PathUpdater(config.collapseAnimationSource);
   config.autoAnimationSource = PathUpdater(config.autoAnimationSource);
   config.userAnimationSource = PathUpdater(config.userAnimationSource);
-
+  this.collapsedLoader = new IFrameLoader(this.collapsedDIV, config.collapseAnimationSource, "collapsedIframeSource", "collapsed");
+  this.autoLoader = new IFrameLoader(this.autoDIV, config.autoAnimationSource, "autoIframeSource", "expanded");
 
 };
 
 App.prototype.loadCollapsed = function() {
 
-   this.collapsedLoader = new IFrameLoader(this.collapsedDIV, config.collapseAnimationSource, "collapsedIframeSource", "collapsed");
-
-
   if (config.isAuto) {
-      this.collapsedLoader.loaded.addOnce(this._collapsedLoadedAUTO, this);
+      this.collapsedLoader.loaded.addOnce(this._collapsedLoadedAUTO, this,10);
   } else {
-      this.collapsedLoader.loaded.addOnce(this._collapsedLoadedUSER, this);
+      this.collapsedLoader.loaded.addOnce(this._collapsedLoadedUSER, this,10);
   }
 
   this.collapsedLoader.load();
 
+  return this.userLoader;
 };
 
 App.prototype.loadAuto = function() {
-  this.autoLoader = new IFrameLoader(this.autoDIV, config.autoAnimationSource, "autoIframeSource", "expanded");
-  this.autoLoader.loaded.addOnce(this._autoLoaded, this);
+
+  this.autoLoader.loaded.addOnce(this._autoLoaded, this,10 );
   this.autoLoader.load();
+
+  return this.autoLoader;
 
 };
 
 App.prototype.loadUser = function() {
 
   this.userLoader = new IFrameLoader(this.userDIV, config.userAnimationSource, "userIframeSource", "expanded");
-  this.userLoader.loaded.addOnce(this._userLoaded, this);
+  this.userLoader.loaded.addOnce(this._userLoaded, this,10);
   this.userLoader.load();
+
+  return this.userLoader;
 };
 
 // ***************************************************************************************************************************************************************
 // PRIVATE FUNCTIONS
 // ***************************************************************************************************************************************************************
 App.prototype._addAutoListeners = function() {
-  this.adKitState.expansionStart.add(this._expandStartHandlerAUTO, this);
-  this.adKitState.expansionComplete.add(this._expandFinishHandlerAUTO, this);
-  this.adKitState.collapseStart.add(this._collapseStartHandlerAUTO, this);
-  this.adKitState.collapseComplete.add(this._collapseFinishHandlerAUTO, this);
+  this.adKitState.expansionStart.add(this._expandStartHandlerAUTO, this,10);
+  this.adKitState.expansionComplete.add(this._expandFinishHandlerAUTO, this,10);
+  this.adKitState.collapseStart.add(this._collapseStartHandlerAUTO, this,10);
+  this.adKitState.collapseComplete.add(this._collapseFinishHandlerAUTO, this,10);
 };
 App.prototype._removeAutoListeners = function() {
   this.adKitState.expansionStart.remove(this._expandStartHandlerAUTO, this);
@@ -94,10 +97,10 @@ App.prototype._removeAutoListeners = function() {
   this.adKitState.collapseComplete.remove(this._collapseFinishHandlerAUTO, this);
 };
 App.prototype._addUserListeners = function() {
-  this.adKitState.expansionStart.add(this._expandStartHandlerUSER, this);
-  this.adKitState.expansionComplete.add(this._expandFinishHandlerUSER, this);
-  this.adKitState.collapseStart.add(this._collapseStartHandlerUSER, this);
-  this.adKitState.collapseComplete.add(this._collapseFinishHandlerUSER, this);
+  this.adKitState.expansionStart.add(this._expandStartHandlerUSER, this,10);
+  this.adKitState.expansionComplete.add(this._expandFinishHandlerUSER, this,10);
+  this.adKitState.collapseStart.add(this._collapseStartHandlerUSER, this,10);
+  this.adKitState.collapseComplete.add(this._collapseFinishHandlerUSER, this,10);
 };
 App.prototype._removeUserListeners = function() {
   this.adKitState.expansionStart.remove(this._expandStartHandlerUSER, this);
