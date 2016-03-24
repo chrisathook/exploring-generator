@@ -51,6 +51,7 @@ MyAd.prototype.playerReady = function () {
 
 MyAd.prototype.preloadComplete = function () {
   this.init ();
+  this.loadCollapsed();
 };
 
 

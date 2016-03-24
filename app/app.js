@@ -27,7 +27,7 @@ var App = function() {
   // reference for auto timer, set by window.setTimeout if needed
   this._autoTimer = 0;
 
-
+  this.closeButton.addEventListener("click", this._closeButtonHandler);
 
 };
 // api
@@ -39,21 +39,32 @@ var App = function() {
  */
 App.prototype.init = function() {
 
-
-
-  //
-
   console.log("page loaded");
   this.trackingController = TrackingController.getInstance();
   this.trackingController.exitTriggered.add(this._exitHandler, this);
   config.collapseAnimationSource = PathUpdater(config.collapseAnimationSource);
   config.autoAnimationSource = PathUpdater(config.autoAnimationSource);
   config.userAnimationSource = PathUpdater(config.userAnimationSource);
-  this.closeButton.addEventListener("click", this._closeButtonHandler);
-  this.collapsedLoader = new IFrameLoader(this.collapsedDIV, config.collapseAnimationSource, "collapsedIframeSource", "collapsed");
-  this.collapsedLoader.loaded.addOnce(this._collapsedLoaded, this);
-  this.collapsedLoader.load();
+
+
 };
+
+App.prototype.loadCollapsed = function() {
+
+   this.collapsedLoader = new IFrameLoader(this.collapsedDIV, config.collapseAnimationSource, "collapsedIframeSource", "collapsed");
+
+
+  if (config.isAuto) {
+      this.collapsedLoader.loaded.addOnce(this._collapsedLoadedAUTO, this);
+  } else {
+      this.collapsedLoader.loaded.addOnce(this._collapsedLoadedUSER, this);
+  }
+
+  this.collapsedLoader.load();
+
+};
+
+
 // ***************************************************************************************************************************************************************
 // PRIVATE FUNCTIONS
 // ***************************************************************************************************************************************************************
@@ -96,20 +107,23 @@ App.prototype._stopTimer = function() {
 // ***************************************************************************************************************************************************************
 // EVENT HANDLERS RELATED TO LOADING
 // ***************************************************************************************************************************************************************
-App.prototype._collapsedLoaded = function(signal) {
-  console.log(" shell collapsed is loaded");
-  if (config.isAuto) {
+
+
+App.prototype._collapsedLoadedAUTO = function(signal) {
     this._addAutoListeners();
     this.autoLoader = new IFrameLoader(this.autoDIV, config.autoAnimationSource, "autoIframeSource", "expanded");
     this.autoLoader.loaded.addOnce(this._autoLoaded, this);
     this.autoLoader.load();
-  } else {
+
+};
+App.prototype._collapsedLoadedUSER = function(signal) {
     this._addUserListeners();
     this._borderManager.moveBottomBorderUp();
     this.collapsedDIV.setAttribute('class', "opaque collapsed");
     this.collapsedLoader.ad.start();
-  }
+
 };
+
 App.prototype._autoLoaded = function(signal) {
   console.log(" shell auto is loaded");
   this.adKitState.requestExpand();
