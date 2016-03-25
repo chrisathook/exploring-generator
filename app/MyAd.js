@@ -116,9 +116,6 @@ MyAd.prototype._collapseFinishHandlerAUTO = function(signal) {
 
 MyAd.prototype._expandStartHandlerUSER = function(signal) {
 
-
-
-
   this.app.loadUser()
 };
 
